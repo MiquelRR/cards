@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">cardsx</string>
+    <string name="add_card">Afig targeta</string>
+    <!-- https://www.enderrock.cat/redaccio/arxius/imatges/670_1461932184dimonis-serp.jpg -->
+    <string name="title_A">Sangonereta, la serp menuda</string>
+    <string name="text_A">Es una peça lleugera de 6 cosos configurable amb diversos punts per al foc que te l\'aspecte de un drac xines, però d\'alumini</string>
+    <string name="link_text">mes info</string>
+    <string name="image_description">imatge descriptiva</string>
+    <!-- https://ca.wikipedia.org/wiki/Colla_de_Dimonis_de_Massalfassar#/media/Fitxer:2008_03_19_Taratuga_de_Massalfassar_a_la_Cavalcada_del_Foc_de_2008_00.jpg-->
+    <string name="title_B">La Taratuga</string>
+    <string name="text_B">Es la bèstia mes grossa que tenim, deambula sobre rodes als grans correfocs per carrers amples</string>
+    <!-- https://dg9aaz8jl1ktt.cloudfront.net/uploaded_files/000/089/546/verkami_15378f05bc41a9525cd7601dae4714db.jpg?1460584892 -->
+    <string name="title_C">L\'Ovidi, el drac</string>
+    <string name="text_C">Es una peça pesada de 3 cosos, espactacular, disenyada per Miquel, i per eixò a sovint li toca portar el cap</string>
 </resources>
