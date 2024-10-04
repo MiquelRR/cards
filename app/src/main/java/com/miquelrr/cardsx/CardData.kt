@@ -1,4 +1,4 @@
 package com.miquelrr.cardsx
 
-class MyAdapter {
+class CardData {
 }
