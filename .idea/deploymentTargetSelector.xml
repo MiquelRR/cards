@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-10-03T18:44:35.944494472Z">
+        <DropdownSelection timestamp="2024-10-07T10:03:23.260943356Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=1f0f3b9b" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/miquel/.android/avd/Medium_Tablet_API_35.avd" />
             </handle>
           </Target>
         </DropdownSelection>

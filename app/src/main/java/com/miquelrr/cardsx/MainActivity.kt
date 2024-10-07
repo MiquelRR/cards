@@ -1,8 +1,11 @@
 package com.miquelrr.cardsx
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewTreeObserver
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +20,8 @@ class MainActivity :AppCompatActivity() {
     private lateinit var adapter: MyAdapter
     private var isAddIcon = true
     private lateinit var cardDataJsonManager: CardDataJsonManager
+
+    private var isFinishing = false
 
     fun createGridLayoutManager(recyclerView: RecyclerView, columnWidth: Int): GridLayoutManager {
         val totalWidth = recyclerView.width // Ancho total del RecyclerView
@@ -35,12 +40,15 @@ class MainActivity :AppCompatActivity() {
             isAddIcon = true
         }
     }
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+
+    override fun onRestoreInstanceState(savedInstanceState:Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         cardDataList = savedInstanceState.getParcelableArrayList<CardData>("cardDataList")?.toMutableList() ?: mutableListOf()
         deckCards = savedInstanceState.getParcelableArrayList<CardData>("deckCards")?.toMutableList()?: mutableListOf()
-        // ... resto del código para actualizar la UI
+        adapter.updateCardDataList(cardDataList)
+
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,29 +77,34 @@ class MainActivity :AppCompatActivity() {
         recyclerView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 recyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                // El ancho ya está disponible, actualiza el LayoutManager
-                recyclerView.layoutManager = createGridLayoutManager(recyclerView, 800)
+                recyclerView.layoutManager = createGridLayoutManager(recyclerView, 700)
             }
         })
         fab.setOnClickListener {
-            if (isAddIcon) { // Comprobar si el icono es ic_add
+            if (isAddIcon) {
                 if (deckCards.isNotEmpty()) {
                     val cardToMove = deckCards.removeAt(0)
                     cardDataList.add(cardToMove)
                     cardToMove.isSelected=false
-                    adapter.notifyItemInserted(cardDataList.size - 1)
                     updateFabIcon()
+                    adapter.notifyItemInserted(cardDataList.size-1)
+                    cardDataJsonManager.saveAllCards(cardDataList,deckCards)
                 }
             } else {
                 val selectedIndex : Int? = adapter.getSelectedCard()
                 if (selectedIndex !=null) {
                     val cardToMove = cardDataList.removeAt(selectedIndex)
                     deckCards.add(cardToMove)
-                    adapter.notifyItemRemoved(selectedIndex)
                     adapter.setSelectedCardNull()
                     updateFabIcon()
+                    adapter.notifyItemRemoved(selectedIndex)
+                    cardDataJsonManager.saveAllCards(cardDataList,deckCards)
                 }
             }
+            if (savedInstanceState != null){
+                Toast.makeText(this, cardDataList[cardDataList.size-1].title, Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 
@@ -109,10 +122,18 @@ class MainActivity :AppCompatActivity() {
         outState.putParcelableArrayList("cardDataList", ArrayList(cardDataList))
         outState.putParcelableArrayList("deckCards", ArrayList(deckCards))
     }
+    override fun onPause() {
+        super.onPause()
+        isFinishing = isFinishing()
+    }
+
 
     override fun onStop() {
         super.onStop()
-        cardDataJsonManager.saveCardDataToJson(cardDataList)
-        cardDataJsonManager.saveCardDataToJson(deckCards, "deck.json")
+        cardDataJsonManager.saveAllCards(cardDataList,deckCards)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        cardDataJsonManager.saveAllCards(cardDataList,deckCards)
     }
 }

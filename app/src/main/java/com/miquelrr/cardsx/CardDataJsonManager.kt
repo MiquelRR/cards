@@ -7,10 +7,35 @@ import java.io.File
 import java.io.FileWriter
 
 class CardDataJsonManager(private val applicationContext: Context) {
-    fun loadCardsFromJson(json: String = "cards.json"): List<CardData> {
-        val jsonString = applicationContext.assets.open(json).bufferedReader().use { it.readText() }
+
+    private val defaultCardsFileName = "cards.json"
+    private val defaultDeckFileName = "deck.json"
+
+    private fun copyAssetToFile(fileName: String) {
+        val assetManager = applicationContext.assets
+        val file = File(applicationContext.filesDir, fileName)
+
+        assetManager.open(fileName).use { inputStream ->
+            file.outputStream().use { outputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        }
+    }
+    fun saveAllCards(hand: List<CardData>,deck: List<CardData>){
+        saveCardDataToJson(hand, defaultCardsFileName)
+        saveCardDataToJson(deck, defaultDeckFileName)
+    }
+
+    fun loadCardsFromJson(fileName: String = defaultCardsFileName): List<CardData> {
+        val file = File(applicationContext.filesDir, fileName)
+        if (!file.exists()) {
+            copyAssetToFile(fileName)
+        }
+
+        val jsonString = file.readText()
         val jsonArray = JSONArray(jsonString)
         val cardDataList = mutableListOf<CardData>()
+
         for (i in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
             val cardData = CardData(

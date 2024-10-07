@@ -12,27 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 
-class MyAdapter(private val cardDataList: List<CardData>) :
+class MyAdapter(private var cardDataList: List<CardData>) :
     RecyclerView.Adapter<MyAdapter.CardViewHolder>() {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private var selectedCardIndex: Int? = null
 
@@ -106,5 +87,9 @@ class MyAdapter(private val cardDataList: List<CardData>) :
 
     override fun getItemViewType(position: Int): Int {
         return cardDataList[position].cardViewType
+    }
+    fun updateCardDataList(newCardDataList: List<CardData>) {
+        cardDataList = newCardDataList
+        notifyDataSetChanged()
     }
 }
