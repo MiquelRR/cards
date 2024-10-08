@@ -62,12 +62,13 @@ class MyAdapter(private var cardDataList: List<CardData>) :
         holder.button.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(cardData.externalLink))
             holder.itemView.context.startActivity(intent) }
-        // ... (Configura el botóny otros elementos)
-        val cardView = holder.itemView as MaterialCardView // Asumiendo que la vista es un MaterialCardView
+        val cardView = holder.itemView as MaterialCardView
         if (cardData.isSelected) {
-            cardView.cardElevation = 8.0F // Elevación alta
+            //cardView.cardElevation = holder.itemView.context.resources.getDimension(R.dimen.selected_card_elevation)
+            cardView.cardElevation = 8.0F
         } else {
-            cardView.cardElevation = 0.0F // Elevación baja
+            //cardView.cardElevation = holder.itemView.context.resources.getDimension(R.dimen.unselected_card_elevation)
+            cardView.cardElevation = 0-0F
         }
         holder.itemView.setOnClickListener {
             val sel = !cardData.isSelected

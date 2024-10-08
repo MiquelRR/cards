@@ -3,6 +3,7 @@ package com.miquelrr.cardsx
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -10,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity :AppCompatActivity() {
@@ -24,7 +26,7 @@ class MainActivity :AppCompatActivity() {
     private var isFinishing = false
 
     fun createGridLayoutManager(recyclerView: RecyclerView, columnWidth: Int): GridLayoutManager {
-        val totalWidth = recyclerView.width // Ancho total del RecyclerView
+        val totalWidth = recyclerView.width // Total wide of RecyclerView
         val columns = (totalWidth / columnWidth).coerceAtLeast(1)
         val layoutManager = GridLayoutManager(recyclerView.context, columns)
         return layoutManager
@@ -43,10 +45,29 @@ class MainActivity :AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState:Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
+        //Teacher: i know that getParcelableArrayList<T>("cardDataList") is deprecated, but getParcelableArrayList("cardDataList", CardData::class.java) crashes on my android phone
         cardDataList = savedInstanceState.getParcelableArrayList<CardData>("cardDataList")?.toMutableList() ?: mutableListOf()
         deckCards = savedInstanceState.getParcelableArrayList<CardData>("deckCards")?.toMutableList()?: mutableListOf()
         adapter.updateCardDataList(cardDataList)
 
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_exit -> {
+                // Handle search action
+                return true
+            }
+            R.id.action_up -> {
+                // Handle settings action
+                return true
+            }
+            R.id.action_down -> {
+                // Handle settings action
+                return true
+            }
+
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
 
@@ -54,10 +75,14 @@ class MainActivity :AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val bottomAppBar = findViewById<BottomAppBar>(R.id.bottomAppBar)
+        //setSupportActionBar(bottomAppBar)
+        bottomAppBar.replaceMenu(R.menu.bottom_app_bar_menu)
 
         cardDataJsonManager = CardDataJsonManager(applicationContext)
 
         if (savedInstanceState != null){
+            //Teacher: i know that getParcelableArrayList<T>("cardDataList") is deprecated, but getParcelableArrayList("cardDataList", CardData::class.java) crashes on my android phone
             cardDataList = savedInstanceState.getParcelableArrayList<CardData>("cardDataList")?.toMutableList() ?: mutableListOf()
             deckCards = savedInstanceState.getParcelableArrayList<CardData>("deckCards")?.toMutableList() ?: mutableListOf()
         } else {
@@ -70,6 +95,7 @@ class MainActivity :AppCompatActivity() {
         recyclerView = findViewById(R.id.my_recycler_view)
         adapter = MyAdapter(cardDataList)
         val selectedIndex = adapter.getSelectedCard()
+
         fab=findViewById(R.id.fab)
         updateFabIcon()
         recyclerView.adapter = adapter
@@ -80,6 +106,7 @@ class MainActivity :AppCompatActivity() {
                 recyclerView.layoutManager = createGridLayoutManager(recyclerView, 700)
             }
         })
+
         fab.setOnClickListener {
             if (isAddIcon) {
                 if (deckCards.isNotEmpty()) {
