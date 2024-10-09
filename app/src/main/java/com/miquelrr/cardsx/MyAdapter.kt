@@ -67,6 +67,7 @@ class MyAdapter(private var cardDataList: List<CardData>) : RecyclerView.Adapter
         val cardData = cardDataList[position]
         Glide.with(holder.itemView.context)
             .load(cardData.imageUrl)
+            .override(300, 300)
             .into(holder.imageView)
         holder.titleTextView.text = cardData.title
         holder.descriptionTextView.text = cardData.description

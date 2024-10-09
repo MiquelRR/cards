@@ -3,10 +3,12 @@ package com.miquelrr.cardsx
 import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.os.HandlerCompat.postDelayed
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,16 +60,17 @@ class MainActivity :AppCompatActivity() {
         deckCards = savedInstanceState.getParcelableArrayList<CardData>("deckCards")?.toMutableList()?: mutableListOf()
         adapter.updateCardDataList(cardDataList)
         focusOnSelected()
-        updateFabIcon()
+
 
     }
 
-    private fun focusOnSelected() {
+    private fun focusOnSelected(){
         selectedCardPosition = adapter.getSelectedCard() ?: -1
         if (selectedCardPosition != -1) {
             recyclerView.postDelayed({ // Retrasar el scroll
                 recyclerView.smoothScrollToPosition(selectedCardPosition!!)
             }, 500)
+            updateFabIcon()
 
         }
     }
@@ -113,7 +116,6 @@ class MainActivity :AppCompatActivity() {
         adapter.attachToRecyclerView(recyclerView, snapHelper)
 
         fab=findViewById(R.id.fab)
-        updateFabIcon()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         // Aplicar delay en la configuración del LayoutManager
@@ -136,7 +138,7 @@ class MainActivity :AppCompatActivity() {
                     cardToMove.isSelected=true
                     adapter.setSelectedCard(cardDataList.size-1)
                     adapter.notifyItemInserted(cardDataList.size-1)
-                    updateFabIcon()
+                    focusOnSelected()
                     cardDataJsonManager.saveAllCards(cardDataList,deckCards)
                 }
             } else {
@@ -154,7 +156,7 @@ class MainActivity :AppCompatActivity() {
 
 
         }
-        focusOnSelected()
+
         bottomAppBar.replaceMenu(R.menu.bottom_app_bar_menu)
 
         bottomAppBar.setOnMenuItemClickListener{ menuItem ->
@@ -181,6 +183,8 @@ class MainActivity :AppCompatActivity() {
                 else -> false
             }
         }
+
+        focusOnSelected()
 
         val selectedIndexObserver = Observer<Int?> { selectedIndex ->
             if (selectedIndex != null) {

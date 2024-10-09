@@ -1,25 +1,24 @@
 [
   {
-    "imageUrl": "https://scontent.fvlc4-1.fna.fbcdn.net/v/t39.30808-6/456161850_352893674560416_3667707865344619711_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=f727a1&_nc_ohc=hnyOsYx2UtQQ7kNvgGGObmp&_nc_ht=scontent.fvlc4-1.fna&_nc_gid=AyFwhAwEHvjSIVP9UiWHe9c&oh=00_AYDxwsVZCeQstVfQ2vOBR5t5hycMmsTLH-TTRfbZ9E8ffw&oe=67058D32",
-    "title": "La Bici",
-    "description": "El dimoni sobre rodes era una película de Spilberg?",
-    "externalLink": "https://www.filmaffinity.com/es/film927645.html",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/23/2008_03_19_Taratuga_de_Massalfassar_a_la_Cavalcada_del_Foc_de_2008_00.jpg",
+    "title": "La Taratuga",
+    "description": "Es la bèstia mes grossa que tenim, deambula sobre rodes als grans correfocs per carrers amples",
+    "externalLink": "https://www.flickr.com/photos/atila-horta/2601209552",
     "cardViewType": 1 ,
     "isSelected" : false
   },
   {
-    "imageUrl": "https://scontent.fvlc4-1.fna.fbcdn.net/v/t39.30808-6/456270868_352896744560109_4569175365591635528_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=f727a1&_nc_ohc=W34pHHyrtCUQ7kNvgH5U4Qv&_nc_ht=scontent.fvlc4-1.fna&_nc_gid=A-3ftcz8wBc_9XapFaXWKMC&oh=00_AYDYZsacETTdu_ed_BMPzEnxldQ3GQcLBN9tzMEuCPOrvg&oe=6705AD24",
-    "title": "Rita, L'Arpella",
-    "description": "Es una peça de alumini portada per un dimoni, que li pesa com un matrimoni falç",
-    "externalLink": "https://www.elmundo.es/comunidad-valenciana/2015/02/26/54eed5e5268e3e08138b456f.html",
+    "imageUrl": "https://dg9aaz8jl1ktt.cloudfront.net/uploaded_files/000/089/546/verkami_15378f05bc41a9525cd7601dae4714db.jpg?1460584892","title": "L'Ovidi, el Drac",
+    "description": "Es una peça pesada de 3 cosos, espactacular, disenyada per Miquel, i per eixò a sovint li toca portar el cap",
+    "externalLink": "https://www.hortanoticias.com/el-dimonis-de-massalfassar-celebren-el-seu-25e-aniversari/",
     "cardViewType": 2,
     "isSelected" : false
   },
   {
-    "imageUrl": "https://scontent.fvlc4-1.fna.fbcdn.net/v/t39.30808-6/456129551_352893841227066_1584689878445599204_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=f727a1&_nc_ohc=CsxCziDxX-gQ7kNvgH5w5qY&_nc_ht=scontent.fvlc4-1.fna&_nc_gid=AU6iy3o0Ol0pwZFdxJ82tCf&oh=00_AYDKXtsJ6FERknHO7nxcLiQsSvTijvU3dDK7OQ64j-VXmA&oe=67057BB1",
-    "title": "La Forca",
-    "description": "Basics dels dimonis, que fariem sense ella?",
-    "externalLink": "https://www.diablesdevilafranca.org/noticies/com-es-fa-una-forca/",
+    "imageUrl": "https://www.enderrock.cat/redaccio/arxius/imatges/670_1461932184dimonis-serp.jpg",
+    "title": "Sangonereta, la serp menuda",
+    "description": "Es una peça lleugera de 6 cosos configurable amb diversos punts per al foc que te l'aspecte de un drac xines, però d'alumini",
+    "externalLink": "https://ca.m.wikipedia.org/wiki/Fitxer:Correfoc_dimonis_massalfassar_la_serp.JPG",
     "cardViewType": 0,
     "isSelected" : false
   }
