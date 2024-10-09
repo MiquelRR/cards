@@ -8,12 +8,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 
-class MyAdapter(private var cardDataList: List<CardData>) :
-    RecyclerView.Adapter<MyAdapter.CardViewHolder>() {
+class MyAdapter(private var cardDataList: List<CardData>) : RecyclerView.Adapter<MyAdapter.CardViewHolder>() {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var snapHelper: LinearSnapHelper
 
     private var selectedCardIndex: Int? = null
 
@@ -24,7 +28,13 @@ class MyAdapter(private var cardDataList: List<CardData>) :
     }
 
     fun getSelectedCard(): Int? {
+        for (card in cardDataList) {if (card.isSelected) {selectedCardIndex=cardDataList.indexOf(card);break}}
         return selectedCardIndex
+    }
+
+    fun setSelectedCard(position: Int) {
+        selectedCardIndex = position
+        notifyItemChanged(position)
     }
 
     fun setSelectedCardNull(){
@@ -32,7 +42,7 @@ class MyAdapter(private var cardDataList: List<CardData>) :
         notifyDataSetChanged()
     }
 
-    // Un solo ViewHolder para todos los tipos de tarjeta
+    // Only one cardholder for all models of cards
     class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.card_a_image)
         val titleTextView: TextView = itemView.findViewById(R.id.card_title)
@@ -46,9 +56,10 @@ class MyAdapter(private var cardDataList: List<CardData>) :
             CARD_A -> R.layout.card_a_layout
             CARD_B -> R.layout.card_b_layout
             CARD_C -> R.layout.card_c_layout
-            else -> throw IllegalArgumentException("Tipo de vista inválido")
+            else -> throw IllegalArgumentException("Not implemented layout for value "+viewType)
         }
         val itemView = layoutInflater.inflate(layoutModel, parent, false)
+
         return CardViewHolder(itemView)
     }
 
@@ -66,10 +77,12 @@ class MyAdapter(private var cardDataList: List<CardData>) :
         if (cardData.isSelected) {
             //cardView.cardElevation = holder.itemView.context.resources.getDimension(R.dimen.selected_card_elevation)
             cardView.cardElevation = 8.0F
+            selectedCardIndex=cardDataList.indexOf(cardData)
         } else {
             //cardView.cardElevation = holder.itemView.context.resources.getDimension(R.dimen.unselected_card_elevation)
-            cardView.cardElevation = 0-0F
+            cardView.cardElevation = 0.0F
         }
+
         holder.itemView.setOnClickListener {
             val sel = !cardData.isSelected
             for (card in cardDataList) {
@@ -80,6 +93,13 @@ class MyAdapter(private var cardDataList: List<CardData>) :
             }
             cardData.isSelected = sel
             selectedCardIndex = if (sel) position else null
+            if (selectedCardIndex != null) {
+                val layoutManager = recyclerView.layoutManager
+                val viewToSnap = layoutManager?.findViewByPosition(selectedCardIndex!!)
+                if (viewToSnap != null) {
+                    recyclerView.smoothScrollToPosition(selectedCardIndex!!)
+                }
+            }
             notifyItemChanged(position)
             (holder.itemView.context as MainActivity).updateFabIcon()
         }
@@ -92,5 +112,9 @@ class MyAdapter(private var cardDataList: List<CardData>) :
     fun updateCardDataList(newCardDataList: List<CardData>) {
         cardDataList = newCardDataList
         notifyDataSetChanged()
+    }
+    fun attachToRecyclerView(recyclerView: RecyclerView, snapHelper: LinearSnapHelper) {
+        this.recyclerView = recyclerView
+        this.snapHelper = snapHelper
     }
 }

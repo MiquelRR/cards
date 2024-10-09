@@ -18,4 +18,10 @@
     <string name="app_exit">Eixir de l\'app</string>
     <string name="card_up">Pujar carta</string>
     <string name="card_down">Baixar carta</string>
+    <string name="remove_advice">Eliminada</string>
+    <string name="undo">Desfer</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="really_wanna_exit">Segur que vols eixir?</string>
+    <string name="exit_app">Eixir de l\'app</string>
 </resources>
