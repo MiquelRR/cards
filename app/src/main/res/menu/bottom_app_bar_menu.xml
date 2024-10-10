@@ -7,6 +7,11 @@
         android:icon="@drawable/ic_exit"
         android:title="@string/app_exit"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_remove"
+        android:icon="@drawable/ic_remove"
+        android:title="@string/delete_card"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_up"
@@ -19,5 +24,6 @@
         android:icon="@drawable/ic_move_down"
         android:title="@string/card_down"
         app:showAsAction="ifRoom"/>
+
 
 </menu>

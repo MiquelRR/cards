@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
@@ -102,7 +101,7 @@ class MyAdapter(private var cardDataList: List<CardData>) : RecyclerView.Adapter
                 }
             }
             notifyItemChanged(position)
-            (holder.itemView.context as MainActivity).updateFabIcon()
+            (holder.itemView.context as MainActivity).refreshIcons()
         }
     }
     override fun getItemCount(): Int = cardDataList.size

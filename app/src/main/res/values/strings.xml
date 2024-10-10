@@ -24,4 +24,5 @@
     <string name="no">No</string>
     <string name="really_wanna_exit">Segur que vols eixir?</string>
     <string name="exit_app">Eixir de l\'app</string>
+    <string name="delete_card">Eliminar carta</string>
 </resources>

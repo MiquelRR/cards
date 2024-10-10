@@ -3,13 +3,6 @@ package com.miquelrr.cardsx
 import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Toast
-import androidx.core.os.HandlerCompat.postDelayed
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -17,15 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import java.util.Collections
 
 class MainActivity :AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var cardDataList: MutableList<CardData>
     private lateinit var deckCards: MutableList<CardData>
+    private lateinit var bottomAppBar: BottomAppBar
     private var selectedCardPosition: Int? = null
 
     private lateinit var adapter: MyAdapter
-    private var isAddIcon = true
     private lateinit var cardDataJsonManager: CardDataJsonManager
     lateinit var snapHelper: LinearSnapHelper
 
@@ -39,17 +33,14 @@ class MainActivity :AppCompatActivity() {
     }
     lateinit var fab: FloatingActionButton
 
-    fun updateFabIcon() {
-        if (adapter.getSelectedCard() != null) {
-            fab.setImageResource(R.drawable.ic_remove)
-            isAddIcon = false
-            fab.isEnabled=true
-            recyclerView.smoothScrollToPosition(adapter.getSelectedCard()!!)
-        } else {
-            fab.setImageResource(R.drawable.ic_add)
-            fab.isEnabled=deckCards.isNotEmpty()
-
-        }
+    fun refreshIcons() {
+        selectedCardPosition = adapter.getSelectedCard() ?: -1
+        val cardSelected = selectedCardPosition != -1
+        bottomAppBar.menu.findItem(R.id.action_up).isVisible=cardSelected && selectedCardPosition!=0
+        bottomAppBar.menu.findItem(R.id.action_down).isVisible=cardSelected && selectedCardPosition!=cardDataList.size-1
+        bottomAppBar.menu.findItem(R.id.action_remove).isVisible=cardSelected
+        bottomAppBar.menu.findItem(R.id.action_exit).isVisible=!cardSelected
+        fab.isEnabled=deckCards.isNotEmpty()
     }
 
     override fun onRestoreInstanceState(savedInstanceState:Bundle) {
@@ -70,7 +61,7 @@ class MainActivity :AppCompatActivity() {
             recyclerView.postDelayed({ // Retrasar el scroll
                 recyclerView.smoothScrollToPosition(selectedCardPosition!!)
             }, 500)
-            updateFabIcon()
+            refreshIcons()
 
         }
     }
@@ -85,7 +76,7 @@ class MainActivity :AppCompatActivity() {
             deckCards.remove(removedCard)
             adapter.updateCardDataList(cardDataList)
             adapter.setSelectedCard(position)
-            updateFabIcon()
+            refreshIcons()
             adapter.notifyItemInserted(position)
         }
         snackbar.anchorView = fab
@@ -96,7 +87,7 @@ class MainActivity :AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val bottomAppBar = findViewById<BottomAppBar>(R.id.bottomAppBar)
+        bottomAppBar = findViewById<BottomAppBar>(R.id.bottomAppBar)
 
         cardDataJsonManager = CardDataJsonManager(applicationContext)
 
@@ -122,14 +113,14 @@ class MainActivity :AppCompatActivity() {
         recyclerView.postDelayed( {
             val gridLayoutWidth =resources.getDimensionPixelSize(R.dimen.max_column_size)
             recyclerView.layoutManager = createGridLayoutManager(recyclerView, gridLayoutWidth)
+            refreshIcons()
         },300)
 
         fab.setOnClickListener {
 
             selectedCardPosition = adapter.getSelectedCard()
-            if (selectedCardPosition==null) {
-                if (deckCards.isNotEmpty()) {
 
+                if (deckCards.isNotEmpty()) {
                     if (selectedCardPosition != null) {
                         cardDataList[selectedCardPosition!!].isSelected=false
                     }
@@ -141,18 +132,7 @@ class MainActivity :AppCompatActivity() {
                     focusOnSelected()
                     cardDataJsonManager.saveAllCards(cardDataList,deckCards)
                 }
-            } else {
-                val selectedIndex : Int? = adapter.getSelectedCard()
-                if (selectedIndex !=null) {
-                    val cardToMove = cardDataList.removeAt(selectedIndex)
-                    deckCards.add(cardToMove)
-                    adapter.setSelectedCardNull()
-                    adapter.notifyItemRemoved(selectedIndex)
-                    updateFabIcon()
-                    showUndoSnackbar(cardToMove,selectedIndex)
-                    cardDataJsonManager.saveAllCards(cardDataList,deckCards)
-                }
-            }
+
 
 
         }
@@ -173,11 +153,34 @@ class MainActivity :AppCompatActivity() {
                     true
                 }
                 R.id.action_up -> {
-                    // Realizar la acción "up"
+                    val selectedPosition : Int = adapter.getSelectedCard() ?: -1
+                    Collections.swap(cardDataList, selectedPosition, selectedPosition - 1)
+                    adapter.notifyItemMoved(selectedPosition, selectedPosition - 1)
+                    adapter.notifyItemChanged(selectedPosition)
+                    adapter.notifyItemChanged(selectedPosition - 1)
+                    adapter.setSelectedCard(selectedPosition - 1)
                     true
                 }
                 R.id.action_down -> {
-                    //Realizar la acción "down"
+                    val selectedPosition : Int = adapter.getSelectedCard() ?: -1
+                    Collections.swap(cardDataList, selectedPosition, selectedPosition + 1 )
+                    adapter.notifyItemMoved(selectedPosition, selectedPosition + 1)
+                    adapter.notifyItemChanged(selectedPosition)
+                    adapter.notifyItemChanged(selectedPosition + 1)
+                    adapter.setSelectedCard(selectedPosition + 1)
+                    true
+                }
+                R.id.action_remove -> {
+                    val selectedIndex : Int? = adapter.getSelectedCard()
+                    if (selectedIndex !=null) {
+                        val cardToMove = cardDataList.removeAt(selectedIndex)
+                        deckCards.add(cardToMove)
+                        adapter.setSelectedCardNull()
+                        adapter.notifyItemRemoved(selectedIndex)
+                        refreshIcons()
+                        showUndoSnackbar(cardToMove,selectedIndex)
+                        cardDataJsonManager.saveAllCards(cardDataList,deckCards)
+                    }
                     true
                 }
                 else -> false
@@ -186,13 +189,6 @@ class MainActivity :AppCompatActivity() {
 
         focusOnSelected()
 
-        val selectedIndexObserver = Observer<Int?> { selectedIndex ->
-            if (selectedIndex != null) {
-                fab.setImageResource(R.drawable.ic_remove)
-            } else {
-                fab.setImageResource(R.drawable.ic_add)
-            }
-        }
 
     }
     override fun onSaveInstanceState(outState: Bundle) {
