@@ -159,6 +159,7 @@ class MainActivity :AppCompatActivity() {
                     adapter.notifyItemChanged(selectedPosition)
                     adapter.notifyItemChanged(selectedPosition - 1)
                     adapter.setSelectedCard(selectedPosition - 1)
+                    focusOnSelected()
                     true
                 }
                 R.id.action_down -> {
@@ -168,6 +169,7 @@ class MainActivity :AppCompatActivity() {
                     adapter.notifyItemChanged(selectedPosition)
                     adapter.notifyItemChanged(selectedPosition + 1)
                     adapter.setSelectedCard(selectedPosition + 1)
+                    focusOnSelected()
                     true
                 }
                 R.id.action_remove -> {
